@@ -4,6 +4,8 @@ import bcryptjs from 'bcryptjs';
 import jsonwebtoken from 'jsonwebtoken';
 import { UserInterFace } from '../interfaces/UserUserInterFace';
 import nodemailer from 'nodemailer';
+import PasswordResetTokenModel from '../models/PasswordResetTokenModel';
+import { PasswordResetTokenInterFace } from '../interfaces/PasswordResetTokenInterFace';
 
 interface CustomRequest extends Request {
     user?: any;
@@ -64,16 +66,25 @@ export async function logoutUser(req: CustomRequest, res: Response) {
 
     }
 }
-export async function forgotPassword(req: Request, res: Response) {
+export async function getCodeForResetPassword(req: Request, res: Response) {
     const { GMAIL_APP_USER, GMAIL_APP_PASSWORD }: any = process.env;
     try {
         const { email } = req.body;
-        // const user: UserInterFace | null = await UserModel.findOne({ email: email });
-        // if(!user){
-        //     return res.status(401).json('Email not found');
-        // }
-        
+        const user: UserInterFace | null = await UserModel.findOne({ email: email });
+        if (!user) {
+            return res.status(401).json('Email not found');
+        }
         const verificationCode = await Math.floor(100000 + Math.random() * 900000).toString();
+
+        const expirationTime = new Date(Date.now() + 10 * 60 * 1000);
+
+        const passwordResetToken = new PasswordResetTokenModel({
+            owner: user._id,
+            token: verificationCode,
+            expires: expirationTime,
+        });
+
+        await passwordResetToken.save();
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -94,5 +105,30 @@ export async function forgotPassword(req: Request, res: Response) {
     } catch (error) {
         console.error('Error sending email:', error);
         res.status(500).json({ error: 'An error occurred while sending the email' });
+    }
+}
+export async function ResetPassword(req: Request, res: Response) {
+    try {
+        const { email, code, newPassword } = req.body;
+        let passwordResetToken: PasswordResetTokenInterFace | any = await PasswordResetTokenModel.findOne({ token: code })
+            .populate('owner')
+            .exec();
+        if (!passwordResetToken || passwordResetToken.expires < new Date()) {
+            return res.status(400).json({ error: 'Invalid verification code' });
+        }
+        if (passwordResetToken.owner.email !== email) {
+            return res.status(400).json({ error: 'Email and verification code do not match' });
+        }
+        
+        const hashPassword = await bcryptjs.hashSync(newPassword, 10);
+        let user = passwordResetToken.owner;
+        user.hashPassword = hashPassword;
+        await user.save();
+
+        await passwordResetToken.deleteOne();
+
+        return res.status(200).json({ message: 'Password reset successful' });
+    } catch (error) {
+        return res.status(500).json({ error: 'An error occurred while resetting the password' });
     }
 }
