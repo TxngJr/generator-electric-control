@@ -1,4 +1,6 @@
 #include <ZMPT101B.h>
+#include <WiFi.h>
+#include <WiFiManager.h>
 
 #define READ_AC_PRIMARY_PIN 10
 #define READ_AC_SECONDARY_PIN 12
@@ -38,7 +40,14 @@ void setup() {
   xTaskCreate(
     taskVeriflyIsPowerOutage,
     "VeriflyIsPowerOutageTask",
-    1000,
+    2000,
+    NULL,
+    1,
+    &taskHandle);
+  xTaskCreate(
+    taskSentData,
+    "SentDataTask",
+    5000,
     NULL,
     1,
     &taskHandle);
@@ -62,7 +71,6 @@ void loop() {
       if (readACSecondary.getRmsVoltage() > POWER_OUTAGE_VALUE) {
         digitalWrite(CONTROL_START_SECONDARY_PIN, LOW);  //????????????????????????????????
       }
-      
     }
     while (!digitalRead(MODE_AC_SECONDARY_PIN)) {
       digitalWrite(CONTROL_AC_PRIMARY_PIN, LOW);
@@ -105,5 +113,26 @@ void taskVeriflyIsPowerOutage(void *pvParameters) {
 
       vTaskDelay(taskDelay / 2);
     }
+  }
+}
+
+void taskSentData(void *pvParameters) {
+  unsigned long previousMillis = 0;
+  WiFi.mode(WIFI_STA);
+  WiFiManager wm;
+  bool res;
+  res = wm.autoConnect("Test", "12345678");
+  if (!res) {
+    Serial.println("Failed to connect");
+    ESP.restart();
+  } else {
+    Serial.println("connect success");
+  }
+
+  while (1) {
+    Serial.println("hello");
+
+
+    vTaskDelay(taskDelay / 2);
   }
 }
