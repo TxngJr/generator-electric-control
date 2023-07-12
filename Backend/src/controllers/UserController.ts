@@ -101,10 +101,9 @@ export async function getCodeForResetPassword(req: Request, res: Response) {
         };
 
         await transporter.sendMail(mailOptions);
-        res.status(200).json({ message: 'Verification code sent successfully' });
+        res.status(200).json('Verification code sent successfully');
     } catch (error) {
-        console.error('Error sending email:', error);
-        res.status(500).json({ error: 'An error occurred while sending the email' });
+        res.status(500).json('An error occurred while sending the email');
     }
 }
 export async function ResetPassword(req: Request, res: Response) {
@@ -114,12 +113,12 @@ export async function ResetPassword(req: Request, res: Response) {
             .populate('owner')
             .exec();
         if (!passwordResetToken || passwordResetToken.expires < new Date()) {
-            return res.status(400).json({ error: 'Invalid verification code' });
+            return res.status(400).json('Invalid verification code');
         }
         if (passwordResetToken.owner.email !== email) {
-            return res.status(400).json({ error: 'Email and verification code do not match' });
+            return res.status(400).json('Email and verification code do not match');
         }
-        
+
         const hashPassword = await bcryptjs.hashSync(newPassword, 10);
         let user = passwordResetToken.owner;
         user.hashPassword = hashPassword;
@@ -127,8 +126,8 @@ export async function ResetPassword(req: Request, res: Response) {
 
         await passwordResetToken.deleteOne();
 
-        return res.status(200).json({ message: 'Password reset successful' });
+        return res.status(200).json('Password reset successful');
     } catch (error) {
-        return res.status(500).json({ error: 'An error occurred while resetting the password' });
+        return res.status(500).json('An error occurred while resetting the password');
     }
 }
