@@ -14,6 +14,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-GEControl-GEControlTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-GEControl-GEControlTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		E679228435074BA0925515A1 /* THSarabun Bold Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6C64438834D0443BBD6BA723 /* THSarabun Bold Italic.ttf */; };
+		5AC209D8E19749EAA81E08EC /* THSarabun Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D8236078BF5C4E18B22CA2B6 /* THSarabun Bold.ttf */; };
+		2D0B676219354767996736F3 /* THSarabun Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A31AC99D3C06483F9134F5A8 /* THSarabun Italic.ttf */; };
+		8D3F6DFAC0C647EF8AAEDF0A /* THSarabun.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C89651B6C314CF8BEB9E716 /* THSarabun.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +48,10 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = GEControl/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-GEControl-GEControlTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GEControl-GEControlTests.release.xcconfig"; path = "Target Support Files/Pods-GEControl-GEControlTests/Pods-GEControl-GEControlTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		6C64438834D0443BBD6BA723 /* THSarabun Bold Italic.ttf */ = {isa = PBXFileReference; name = "THSarabun Bold Italic.ttf"; path = "../src/assets/fonts/THSarabun Bold Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D8236078BF5C4E18B22CA2B6 /* THSarabun Bold.ttf */ = {isa = PBXFileReference; name = "THSarabun Bold.ttf"; path = "../src/assets/fonts/THSarabun Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A31AC99D3C06483F9134F5A8 /* THSarabun Italic.ttf */ = {isa = PBXFileReference; name = "THSarabun Italic.ttf"; path = "../src/assets/fonts/THSarabun Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1C89651B6C314CF8BEB9E716 /* THSarabun.ttf */ = {isa = PBXFileReference; name = "THSarabun.ttf"; path = "../src/assets/fonts/THSarabun.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +130,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				B02FB6C6FFD3489AAFB58A54 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -147,6 +156,18 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		B02FB6C6FFD3489AAFB58A54 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				6C64438834D0443BBD6BA723 /* THSarabun Bold Italic.ttf */,
+				D8236078BF5C4E18B22CA2B6 /* THSarabun Bold.ttf */,
+				A31AC99D3C06483F9134F5A8 /* THSarabun Italic.ttf */,
+				1C89651B6C314CF8BEB9E716 /* THSarabun.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -244,6 +265,10 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				E679228435074BA0925515A1 /* THSarabun Bold Italic.ttf in Resources */,
+				5AC209D8E19749EAA81E08EC /* THSarabun Bold.ttf in Resources */,
+				2D0B676219354767996736F3 /* THSarabun Italic.ttf in Resources */,
+				8D3F6DFAC0C647EF8AAEDF0A /* THSarabun.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
