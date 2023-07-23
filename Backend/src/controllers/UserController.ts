@@ -106,7 +106,24 @@ export async function getCodeForResetPassword(req: Request, res: Response) {
         res.status(500).json('An error occurred while sending the email');
     }
 }
-export async function ResetPassword(req: Request, res: Response) {
+export async function checkCodeForResetPassword(req: Request, res: Response) {
+    try {
+        const { email, code } = req.body;
+        let passwordResetToken: PasswordResetTokenInterFace | any = await PasswordResetTokenModel.findOne({ token: code })
+            .populate('owner')
+            .exec();
+        if (!passwordResetToken || passwordResetToken.expires < new Date()) {
+            return res.status(400).json('Invalid verification code');
+        }
+        if (passwordResetToken.owner.email !== email) {
+            return res.status(400).json('Email and verification code do not match');
+        }
+        return res.status(200).json('Check code successful');
+    } catch (error) {
+        return res.status(500).json('An error occurred while resetting the password');
+    }
+}
+export async function resetPassword(req: Request, res: Response) {
     try {
         const { email, code, newPassword } = req.body;
         let passwordResetToken: PasswordResetTokenInterFace | any = await PasswordResetTokenModel.findOne({ token: code })

@@ -4,23 +4,18 @@ import LogoComponents from '../components/LogoComponent'
 
 type Props = {}
 
-interface RegistrationFormData {
+interface LoginFormData {
     username: string;
-    email: string;
     password: string;
-    confirmPassword: string;
 }
 
-
-const RegisterScreen = (props: Props) => {
-    const [formData, setFormData] = useState<RegistrationFormData>({
+const LoginScreen = (props: Props) => {
+    const [formData, setFormData] = useState<LoginFormData>({
         username: '',
-        email: '',
         password: '',
-        confirmPassword: '',
     });
 
-    const handleChangeText = (key: keyof RegistrationFormData, value: string) => {
+    const handleChangeText = (key: keyof LoginFormData, value: string) => {
         setFormData((prevData) => ({ ...prevData, [key]: value }));
     };
 
@@ -55,7 +50,7 @@ const RegisterScreen = (props: Props) => {
                 <LogoComponents size={200} />
             </View>
             <View>
-                <Text style={[styles.text,{fontSize:64,color:'#000000'}]} >สมัครสมาชิก</Text>
+                <Text style={[styles.text, { fontSize: 64, color: '#000000' }]} >เข้าสู่ระบบ</Text>
             </View>
             <TextInput
                 style={styles.textInput}
@@ -64,45 +59,32 @@ const RegisterScreen = (props: Props) => {
                 placeholder="ชื่อผู้ใช้งาน"
             />
             <TextInput
-                style={styles.textInput}
-                value={formData.email}
-                onChangeText={(text) => handleChangeText('email', text)}
-                placeholder="อีเมล"
-            />
-            <TextInput
-                style={[styles.textInput,{marginBottom:10}]}
+                style={[styles.textInput, { marginBottom: 10 }]}
                 value={formData.password}
                 onChangeText={(text) => handleChangeText('password', text)}
                 placeholder="รหัสผ่าน"
                 secureTextEntry
             />
-            <View>
-                <Text style={styles.text}>
-                    {formData.password == formData.confirmPassword ? ' ' : 'รหัสผ่านไม่ตรงกัน'}
-                </Text>
+            <View style={{ alignItems: 'flex-end', marginBottom:10 }}>
+                <TouchableOpacity onPress={handleRegister}>
+                    <Text style={[styles.text, { fontSize: 24, color: '#000000' }]}>ลืมรหัสผ่าน</Text>
+                    <View style={{ backgroundColor: '#000000', height: 2,position:'absolute',bottom:3,left:2,right:2 }} />
+                </TouchableOpacity>
             </View>
-            <TextInput
-                style={styles.textInput}
-                value={formData.confirmPassword}
-                onChangeText={(text) => handleChangeText('confirmPassword', text)}
-                placeholder="รหัสผ่านอีกครั้ง"
-                placeholderTextColor={'#818181'}
-                secureTextEntry
-            />
             <TouchableOpacity style={styles.containerButton} onPress={handleRegister}>
-                <Text style={[styles.text,{fontSize:40,color:'#2E2D2D'}]}>สมัครสมาชิก</Text>
+                <Text style={[styles.text, { fontSize: 40, color: '#2E2D2D' }]}>เข้าสู่ระบบ</Text>
             </TouchableOpacity>
-            <View style={{alignItems:'center',marginTop:15}}>
-            <TouchableOpacity style={{}} onPress={handleRegister}>
-                <Text style={[styles.text,{fontSize:24,color:'#000000'}]}>เข้าสู่ระบบ</Text>
-                <View style={{backgroundColor:'#000000',width:'auto',height:2}}/>
-            </TouchableOpacity>
+            <View style={{ alignItems: 'center', marginTop: 15 }}>
+                <TouchableOpacity style={{}} onPress={handleRegister}>
+                    <Text style={[styles.text, { fontSize: 24, color: '#000000' }]}>สมัครสมาชิก</Text>
+                    <View style={{ backgroundColor: '#000000', height: 2,position:'absolute',bottom:3,left:2,right:2 }} />
+                </TouchableOpacity>
             </View>
         </View>
     )
 }
 
-export default RegisterScreen
+export default LoginScreen
 
 const styles = StyleSheet.create({
     container: {
@@ -129,15 +111,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 25
     },
-    text:{
+    text: {
         fontFamily: 'THSarabun Bold',
     },
-    containerButton:{
-        backgroundColor:'#73CFF6',
-        width:'auto',
-        height:50,
-        borderRadius:10,
-        alignItems:'center',
-        justifyContent:'center'
+    containerButton: {
+        backgroundColor: '#73CFF6',
+        width: 'auto',
+        height: 50,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
