@@ -74,9 +74,34 @@ export async function getCodeForResetPassword(req: Request, res: Response) {
         if (!user) {
             return res.status(401).json('Email not found');
         }
+
+        let checkPasswordResetToken: PasswordResetTokenInterFace | any = await PasswordResetTokenModel.findOne({ owner: user._id, });
+        if (checkPasswordResetToken) {
+            if (checkPasswordResetToken.expires > new Date()) {
+                return res.status(400).json('The verification code has not expired.');
+            }
+            await checkPasswordResetToken.deleteOne();
+        }
+
         const verificationCode = await Math.floor(100000 + Math.random() * 900000).toString();
 
-        const expirationTime = new Date(Date.now() + 10 * 60 * 1000);
+        const expirationTime = new Date(Date.now() + 3 * 60 * 1000);
+
+        const transporter = await nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: GMAIL_APP_USER,
+                pass: GMAIL_APP_PASSWORD
+            }
+        });
+        const mailOptions = await {
+            from: GMAIL_APP_USER,
+            to: email,
+            subject: 'Password Reset',
+            text: `Your verification code is: ${verificationCode}`,
+        };
+
+        await transporter.sendMail(mailOptions);
 
         const passwordResetToken = new PasswordResetTokenModel({
             owner: user._id,
@@ -86,30 +111,16 @@ export async function getCodeForResetPassword(req: Request, res: Response) {
 
         await passwordResetToken.save();
 
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: GMAIL_APP_USER,
-                pass: GMAIL_APP_PASSWORD
-            }
-        });
-        const mailOptions = {
-            from: GMAIL_APP_USER,
-            to: email,
-            subject: 'Password Reset',
-            text: `Your verification code is: ${verificationCode}`,
-        };
-
-        await transporter.sendMail(mailOptions);
         res.status(200).json('Verification code sent successfully');
     } catch (error) {
         res.status(500).json('An error occurred while sending the email');
     }
 }
+
 export async function checkCodeForResetPassword(req: Request, res: Response) {
     try {
         const { email, code } = req.body;
-        let passwordResetToken: PasswordResetTokenInterFace | any = await PasswordResetTokenModel.findOne({ token: code })
+        const passwordResetToken: PasswordResetTokenInterFace | any = await PasswordResetTokenModel.findOne({ token: code })
             .populate('owner')
             .exec();
         if (!passwordResetToken || passwordResetToken.expires < new Date()) {

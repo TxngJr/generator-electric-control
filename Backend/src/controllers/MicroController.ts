@@ -34,10 +34,38 @@ export async function registerMicroController(req: Request, res: Response) {
     }
 }
 
+export async function getListMicroController(req: CustomRequest, res: Response) {
+    try {
+        const MicroControllers = await MicroControllerModel.find({ owner: req.user._id }, { _id: 1, microControllerName: 1 });
+        if (!MicroControllers || MicroControllers.length === 0) {
+            return res.status(404).json('You do not have any microControllers.');
+        }
+        return res.status(200).json(MicroControllers);
+    } catch (error) {
+        return res.status(507).json('An error occurred while get the microController.');
+    }
+}
 export async function getDataMicroController(req: CustomRequest, res: Response) {
     try {
         const { microControllerId } = req.params;
-        const MicroController = await MicroControllerModel.findOne({ _id: microControllerId, owner: req.user._id });
+        const MicroController = await MicroControllerModel.findOne({ _id: microControllerId, owner: req.user._id },
+            {
+                _id: 1,
+                microControllerName: 1,
+                systemAC: 1,
+                VoltageACPrimary: 1,
+                CurrentACPrimary: 1,
+                PowerACPrimary: 1,
+                EnergyACPrimary: 1,
+                FrequencyACPrimary: 1,
+                PowerFactorACPrimary: 1,
+                VoltageACSecondary: 1,
+                CurrentACSecondary: 1,
+                PowerACSecondary: 1,
+                EnergyACSecondary: 1,
+                FrequencyACSecondary: 1,
+                PowerFactorACSecondary: 1,
+            });
         if (!MicroController) {
             return res.status(404).json('MicroController device not found');
         }
@@ -51,7 +79,22 @@ export async function putDataMicroController(req: Request, res: Response) {
     try {
         const { microControllerId } = req.params;
         const update: Partial<MicroControllerInterFace> = req.body;
-        const updatedMicroController = await MicroControllerModel.findByIdAndUpdate(microControllerId, { systemAC: update.systemAC, readACPrimary: update.readACPrimary, readACSecondary: update.readACSecondary, });
+        const updatedMicroController = await MicroControllerModel.findByIdAndUpdate(microControllerId,
+            {
+                systemAC: update.systemAC,
+                VoltageACPrimary: update.VoltageACPrimary,
+                CurrentACPrimary: update.CurrentACPrimary,
+                PowerACPrimary: update.PowerACPrimary,
+                EnergyACPrimary: update.EnergyACPrimary,
+                FrequencyACPrimary: update.FrequencyACPrimary,
+                PowerFactorACPrimary: update.PowerFactorACPrimary,
+                VoltageACSecondary: update.VoltageACSecondary,
+                CurrentACSecondary: update.CurrentACSecondary,
+                PowerACSecondary: update.PowerACSecondary,
+                EnergyACSecondary: update.EnergyACSecondary,
+                FrequencyACSecondary: update.FrequencyACSecondary,
+                PowerFactorACSecondary: update.PowerFactorACSecondary,
+            });
         if (!updatedMicroController) {
             return res.status(404).json('MicroController device not found');
         }
