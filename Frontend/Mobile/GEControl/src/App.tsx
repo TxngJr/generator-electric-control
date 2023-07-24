@@ -5,12 +5,13 @@ import LoginScreen from './screens/LoginScreen'
 import SendCodeOnGmailScreen from './screens/resetPasswordScreen/SendCodeOnGmailScreen'
 import OTPScreen from './screens/resetPasswordScreen/OTPScreen'
 import ResetPasswordScreen from './screens/resetPasswordScreen/ResetPasswordScreen'
+import ListsDeviceScreen from './screens/ListsDeviceScreen'
 
 type Props = {}
 
 const App = (props: Props) => {
   return (
-    <ResetPasswordScreen/>
+    <ListsDeviceScreen/>
   )
 }
 

@@ -36,11 +36,19 @@ export async function registerMicroController(req: Request, res: Response) {
 
 export async function getListMicroController(req: CustomRequest, res: Response) {
     try {
-        const MicroControllers = await MicroControllerModel.find({ owner: req.user._id }, { _id: 1, microControllerName: 1 });
-        if (!MicroControllers || MicroControllers.length === 0) {
-            return res.status(404).json('You do not have any microControllers.');
-        }
-        return res.status(200).json(MicroControllers);
+        const page: number = parseInt(req.query.page as string) || 1;
+
+        const totalCount: number = await MicroControllerModel.countDocuments();
+
+        const skip: number = (page - 1) * 10;
+
+        const microControllers: MicroControllerInterFace[] = await MicroControllerModel.find({ owner: req.user._id }, { _id: 1, microControllerName: 1, systemAC: 1, EnergyACPrimary: 1 }).skip(skip).limit(10);
+
+        return res.status(200).json({
+            microControllers,
+            currentPage: page,
+            totalPages: Math.ceil(totalCount / 10),
+        });
     } catch (error) {
         return res.status(507).json('An error occurred while get the microController.');
     }
@@ -48,7 +56,7 @@ export async function getListMicroController(req: CustomRequest, res: Response) 
 export async function getDataMicroController(req: CustomRequest, res: Response) {
     try {
         const { microControllerId } = req.params;
-        const MicroController = await MicroControllerModel.findOne({ _id: microControllerId, owner: req.user._id },
+        const MicroController: MicroControllerInterFace | null = await MicroControllerModel.findOne({ _id: microControllerId, owner: req.user._id },
             {
                 _id: 1,
                 microControllerName: 1,
@@ -79,7 +87,7 @@ export async function putDataMicroController(req: Request, res: Response) {
     try {
         const { microControllerId } = req.params;
         const update: Partial<MicroControllerInterFace> = req.body;
-        const updatedMicroController = await MicroControllerModel.findByIdAndUpdate(microControllerId,
+        const updatedMicroController: MicroControllerInterFace | null = await MicroControllerModel.findByIdAndUpdate(microControllerId,
             {
                 systemAC: update.systemAC,
                 VoltageACPrimary: update.VoltageACPrimary,

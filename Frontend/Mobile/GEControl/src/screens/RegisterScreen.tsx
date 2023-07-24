@@ -1,61 +1,43 @@
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import LogoComponents from '../components/LogoComponent'
+import { registerFormData } from '../interfaces/userInterface'
+import { register } from '../apis/userAPI'
 
 type Props = {}
 
-interface RegistrationFormData {
-    username: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
-
 
 const RegisterScreen = (props: Props) => {
-    const [formData, setFormData] = useState<RegistrationFormData>({
+    const [formData, setFormData] = useState<registerFormData>({
         username: '',
         email: '',
         password: '',
         confirmPassword: '',
     });
 
-    const handleChangeText = (key: keyof RegistrationFormData, value: string) => {
+    const handleChangeText = (key: keyof registerFormData, value: string) => {
         setFormData((prevData) => ({ ...prevData, [key]: value }));
     };
 
     const handleRegister = async () => {
-        // Perform your API call here using the formData object
         try {
-            // Make your API call and handle the response
-            // Example code using fetch:
-            const response = await fetch('YOUR_API_ENDPOINT', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                // Registration successful
-                Alert.alert('Registration Successful');
-            } else {
-                // Registration failed
-                Alert.alert('Registration Failed');
-            }
+            register(formData);
         } catch (error) {
-            // Error handling
-            Alert.alert('Error', 'An error occurred while registering.');
+            return null;
         }
     };
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.containerLogo}>
                 <LogoComponents size={200} />
             </View>
-            <View>
-                <Text style={[styles.text,{fontSize:64,color:'#000000'}]} >สมัครสมาชิก</Text>
+            <View style={{height:65}}>
+                <Text style={[styles.text, { fontSize: 64, color: '#000000' }]} >สมัครสมาชิก</Text>
+            </View>
+            <View style={{ paddingLeft: 10 }}>
+                <Text style={styles.text}>
+                    {(formData.username.length >= 10 ? ' ' : 'ชื่อสั้นเกินไป')}
+                </Text>
             </View>
             <TextInput
                 style={styles.textInput}
@@ -63,22 +45,32 @@ const RegisterScreen = (props: Props) => {
                 onChangeText={(text) => handleChangeText('username', text)}
                 placeholder="ชื่อผู้ใช้งาน"
             />
+            <View style={{ paddingLeft: 10 }}>
+                <Text style={styles.text}>
+                    {(formData.email.length >= 5 ? formData.email.endsWith('@gmail.com') ? ' ' : 'กรุณากรอก@gmail.com' : 'กรุณากรอกอีเมล')}
+                </Text>
+            </View>
             <TextInput
                 style={styles.textInput}
                 value={formData.email}
                 onChangeText={(text) => handleChangeText('email', text)}
-                placeholder="อีเมล"
+                placeholder="อีเมล                    @gmail.com"
             />
+            <View style={{ paddingLeft: 10 }}>
+                <Text style={styles.text}>
+                    {(formData.password.length >= 8 ? ' ' : 'รหัสผ่านสั้นเกินไป')}
+                </Text>
+            </View>
             <TextInput
-                style={[styles.textInput,{marginBottom:10}]}
+                style={[styles.textInput]}
                 value={formData.password}
                 onChangeText={(text) => handleChangeText('password', text)}
                 placeholder="รหัสผ่าน"
                 secureTextEntry
             />
-            <View>
+            <View style={{ paddingLeft: 10 }}>
                 <Text style={styles.text}>
-                    {formData.password == formData.confirmPassword ? ' ' : 'รหัสผ่านไม่ตรงกัน'}
+                    {( formData.password == formData.confirmPassword ? ' ' : 'รหัสผ่านไม่ตรงกัน')}
                 </Text>
             </View>
             <TextInput
@@ -89,16 +81,16 @@ const RegisterScreen = (props: Props) => {
                 placeholderTextColor={'#818181'}
                 secureTextEntry
             />
-            <TouchableOpacity style={styles.containerButton} onPress={handleRegister}>
-                <Text style={[styles.text,{fontSize:40,color:'#2E2D2D'}]}>สมัครสมาชิก</Text>
+            <TouchableOpacity style={[styles.containerButton,{marginTop:10}]} onPress={handleRegister} disabled={!(formData.username.length >= 10 && formData.email.length >= 5 && formData.email.endsWith('@gmail.com') && formData.password == formData.confirmPassword && formData.password.length >= 8)}>
+                <Text style={[styles.text, { fontSize: 40, color: '#2E2D2D' }]}>สมัครสมาชิก</Text>
             </TouchableOpacity>
-            <View style={{alignItems:'center',marginTop:15}}>
-            <TouchableOpacity style={{}} onPress={handleRegister}>
-                <Text style={[styles.text,{fontSize:24,color:'#000000'}]}>เข้าสู่ระบบ</Text>
-                <View style={{backgroundColor:'#000000',width:'auto',height:2}}/>
-            </TouchableOpacity>
+            <View style={{ alignItems: 'center', marginTop: 15 }}>
+                <TouchableOpacity style={{}} onPress={handleRegister}  >
+                    <Text style={[styles.text, { fontSize: 24, color: '#000000' }]}>เข้าสู่ระบบ</Text>
+                    <View style={{ backgroundColor: '#000000', height: 2, position: 'absolute', bottom: 1, left: 2, right: 2 }} />
+                </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
@@ -113,12 +105,11 @@ const styles = StyleSheet.create({
     containerLogo: {
         alignSelf: 'center',
         marginTop: 15,
-        marginBottom: 5
     },
     textInput: {
         fontFamily: 'THSarabun Bold',
         color: '#000000',
-        fontSize: 32,
+        fontSize: 28,
         textAlignVertical: 'center',
         backgroundColor: '#FFFFFF',
         width: 'auto',
@@ -127,17 +118,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingLeft: 10,
         borderRadius: 10,
-        marginBottom: 25
+        marginBottom: 5
     },
-    text:{
+    text: {
         fontFamily: 'THSarabun Bold',
+        color: '#000000',
+        fontSize: 16
     },
-    containerButton:{
-        backgroundColor:'#73CFF6',
-        width:'auto',
-        height:50,
-        borderRadius:10,
-        alignItems:'center',
-        justifyContent:'center'
+    containerButton: {
+        backgroundColor: '#73CFF6',
+        width: 'auto',
+        height: 50,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });

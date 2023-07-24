@@ -1,67 +1,47 @@
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import LogoComponents from '../../components/LogoComponent'
 import HelpSvg from '../../assets/svg/HelpSvg';
 import PopupComponent from '../../components/PopupComponent';
+import { resetPasswordFormData } from '../../interfaces/userInterface';
 
 type Props = {}
 
-interface ResetPasswordFormData {
-    password: string;
-    confirmPassword: string;
-}
-
 const ResetPasswordScreen = (props: Props) => {
-    const [formData, setFormData] = useState<ResetPasswordFormData>({
-        password: '',
-        confirmPassword: '',
+    const [formData, setFormData] = useState<resetPasswordFormData>({
+        email: '',
+        code: ['', '', '', '', '', ''],
+        newPassword: '',
+        confirmNewPassword: '',
     });
 
-    const handleChangeText = (key: keyof ResetPasswordFormData, value: string) => {
+    const handleChangeText = (key: keyof resetPasswordFormData, value: string) => {
         setFormData((prevData) => ({ ...prevData, [key]: value }));
     };
 
     const handleRegister = async () => {
-        // Perform your API call here using the formData object
         try {
-            // Make your API call and handle the response
-            // Example code using fetch:
-            const response = await fetch('YOUR_API_ENDPOINT', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                // Registration successful
-                Alert.alert('Registration Successful');
-            } else {
-                // Registration failed
-                Alert.alert('Registration Failed');
-            }
+            return null;
         } catch (error) {
-            // Error handling
-            Alert.alert('Error', 'An error occurred while registering.');
+            return null;
         }
     };
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.containerLogo}>
                 <LogoComponents size={200} />
             </View>
             <Text style={[styles.text, { fontSize: 64, color: '#000000' }]} >กรอกรหัสผ่านใหม่</Text>
             <TextInput
                 style={styles.textInput}
-                value={formData.password}
-                onChangeText={(text) => handleChangeText('password', text)}
+                value={formData.newPassword}
+                onChangeText={(text) => handleChangeText('newPassword', text)}
                 placeholder="รหัสผ่านใหม่"
             />
             <TextInput
                 style={styles.textInput}
-                value={formData.confirmPassword}
-                onChangeText={(text) => handleChangeText('confirmPassword', text)}
+                value={formData.confirmNewPassword}
+                onChangeText={(text) => handleChangeText('confirmNewPassword', text)}
                 placeholder="ยืนยันรหัสผ่าน"
             />
             <TouchableOpacity style={styles.containerButton} onPress={handleRegister}>
@@ -73,7 +53,7 @@ const ResetPasswordScreen = (props: Props) => {
                     <View style={{ backgroundColor: '#000000', height: 2, position: 'absolute', bottom: 3, left: 2, right: 2 }} />
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 

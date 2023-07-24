@@ -1,51 +1,29 @@
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import LogoComponents from '../components/LogoComponent'
+import { loginFormData } from '../interfaces/userInterface'
 
 type Props = {}
 
-interface LoginFormData {
-    username: string;
-    password: string;
-}
-
 const LoginScreen = (props: Props) => {
-    const [formData, setFormData] = useState<LoginFormData>({
+    const [formData, setFormData] = useState<loginFormData>({
         username: '',
         password: '',
     });
 
-    const handleChangeText = (key: keyof LoginFormData, value: string) => {
+    const handleChangeText = (key: keyof loginFormData, value: string) => {
         setFormData((prevData) => ({ ...prevData, [key]: value }));
     };
 
     const handleRegister = async () => {
-        // Perform your API call here using the formData object
         try {
-            // Make your API call and handle the response
-            // Example code using fetch:
-            const response = await fetch('YOUR_API_ENDPOINT', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                // Registration successful
-                Alert.alert('Registration Successful');
-            } else {
-                // Registration failed
-                Alert.alert('Registration Failed');
-            }
+            return null;
         } catch (error) {
-            // Error handling
-            Alert.alert('Error', 'An error occurred while registering.');
+            return null;
         }
     };
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.containerLogo}>
                 <LogoComponents size={200} />
             </View>
@@ -80,7 +58,7 @@ const LoginScreen = (props: Props) => {
                     <View style={{ backgroundColor: '#000000', height: 2,position:'absolute',bottom:3,left:2,right:2 }} />
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 

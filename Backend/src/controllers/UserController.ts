@@ -17,7 +17,7 @@ export async function registerUser(req: Request, res: Response) {
         if (!(username && email && password)) {
             return res.status(406).json('Please provide a vaild username, email and password.');
         }
-        const userExists = await UserModel.findOne({ username: username }, { email: email });
+        const userExists: UserInterFace | null = await UserModel.findOne({ username: username }, { email: email });
         if (userExists) {
             return res.status(404).json('That username or email is already registered. Please choose a different username or email.');
         }
@@ -42,7 +42,7 @@ export async function loginUser(req: Request, res: Response) {
         if (!user) {
             return res.status(404).json('Username or password wrong.');
         }
-        const checkPassword = await bcryptjs.compareSync(password, user.hashPassword);
+        const checkPassword: boolean = await bcryptjs.compareSync(password, user.hashPassword);
         if (!checkPassword) {
             return res.status(404).json('Username or password wrong.');
         }
@@ -69,32 +69,32 @@ export async function logoutUser(req: CustomRequest, res: Response) {
 export async function getCodeForResetPassword(req: Request, res: Response) {
     const { GMAIL_APP_USER, GMAIL_APP_PASSWORD }: any = process.env;
     try {
-        const { email } = req.body;
+        const { email }: { email?: string } = req.body;
         const user: UserInterFace | null = await UserModel.findOne({ email: email });
         if (!user) {
             return res.status(401).json('Email not found');
         }
 
-        let checkPasswordResetToken: PasswordResetTokenInterFace | any = await PasswordResetTokenModel.findOne({ owner: user._id, });
+        let checkPasswordResetToken: PasswordResetTokenInterFace | null = await PasswordResetTokenModel.findOne({ owner: user._id, });
         if (checkPasswordResetToken) {
-            if (checkPasswordResetToken.expires > new Date()) {
+            if (checkPasswordResetToken.expires! > new Date()) {
                 return res.status(400).json('The verification code has not expired.');
             }
             await checkPasswordResetToken.deleteOne();
         }
 
-        const verificationCode = await Math.floor(100000 + Math.random() * 900000).toString();
+        const verificationCode: string = await Math.floor(100000 + Math.random() * 900000).toString();
 
-        const expirationTime = new Date(Date.now() + 3 * 60 * 1000);
+        const expirationTime: Date = new Date(Date.now() + 3 * 60 * 1000);
 
-        const transporter = await nodemailer.createTransport({
+        const transporter: any = await nodemailer.createTransport({
             service: 'gmail',
             auth: {
                 user: GMAIL_APP_USER,
                 pass: GMAIL_APP_PASSWORD
             }
         });
-        const mailOptions = await {
+        const mailOptions: any = await {
             from: GMAIL_APP_USER,
             to: email,
             subject: 'Password Reset',
@@ -119,7 +119,7 @@ export async function getCodeForResetPassword(req: Request, res: Response) {
 
 export async function checkCodeForResetPassword(req: Request, res: Response) {
     try {
-        const { email, code } = req.body;
+        const { email, code }: { email?: string, code?: string | any } = req.body;
         const passwordResetToken: PasswordResetTokenInterFace | any = await PasswordResetTokenModel.findOne({ token: code })
             .populate('owner')
             .exec();
@@ -136,19 +136,21 @@ export async function checkCodeForResetPassword(req: Request, res: Response) {
 }
 export async function resetPassword(req: Request, res: Response) {
     try {
-        const { email, code, newPassword } = req.body;
-        let passwordResetToken: PasswordResetTokenInterFace | any = await PasswordResetTokenModel.findOne({ token: code })
+        const { email, code, newPassword }: { email?: string, code?: string | any, newPassword: string } = req.body;
+        let passwordResetToken: PasswordResetTokenInterFace | null = await PasswordResetTokenModel.findOne({ token: code })
             .populate('owner')
             .exec();
-        if (!passwordResetToken || passwordResetToken.expires < new Date()) {
+        if (!passwordResetToken || passwordResetToken.expires! < new Date()) {
             return res.status(400).json('Invalid verification code');
         }
-        if (passwordResetToken.owner.email !== email) {
+
+        let user: UserInterFace | any = passwordResetToken.owner;
+
+        if (user.email !== email) {
             return res.status(400).json('Email and verification code do not match');
         }
 
-        const hashPassword = await bcryptjs.hashSync(newPassword, 10);
-        let user = passwordResetToken.owner;
+        const hashPassword: string = await bcryptjs.hashSync(newPassword, 10);
         user.hashPassword = hashPassword;
         await user.save();
 

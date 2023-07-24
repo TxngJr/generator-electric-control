@@ -1,63 +1,54 @@
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import LogoComponents from '../../components/LogoComponent'
 import HelpSvg from '../../assets/svg/HelpSvg';
 import PopupComponent from '../../components/PopupComponent';
+import { checkCodeResetPasswordFormData } from '../../interfaces/userInterface';
+import { checkCodeResetPassword } from '../../apis/userAPI';
 
 type Props = {}
 
-interface OTPFormData {
-    OTP: string[];
-}
-
 const OTPScreen = (props: Props) => {
-    const [formData, setFormData] = useState<OTPFormData>({
-        OTP: ['', '', '', '', '', ''],
+    const [formData, setFormData] = useState<checkCodeResetPasswordFormData>({
+        email: '',
+        code: ['', '', '', '', '', ''],
     });
 
     const handleChangeText = (index: number, value: string) => {
-        // Create a copy of the existing formData
         const updatedFormData = { ...formData };
-        // Update the OTP value at the specified index
-        updatedFormData.OTP[index] = value;
-        // Update the state with the new formData
+        updatedFormData.code[index] = value;
         setFormData(updatedFormData);
     };
 
     const handleRegister = async () => {
-        // Perform your API call here using the formData object
         try {
-            // Make your API call and handle the response
-            // Example code using fetch:
-            const response = await fetch('YOUR_API_ENDPOINT', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                // Registration successful
-                Alert.alert('Registration Successful');
-            } else {
-                // Registration failed
-                Alert.alert('Registration Failed');
-            }
+            checkCodeResetPassword(formData);
         } catch (error) {
-            // Error handling
-            Alert.alert('Error', 'An error occurred while registering.');
+            return null;
         }
     };
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.containerLogo}>
                 <LogoComponents size={200} />
             </View>
-            <Text style={[styles.text, { fontSize: 64, color: '#000000' }]} >กรอก OTP</Text>
-            <View style={{flexDirection:'row',marginBottom:30}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={[styles.text, { fontSize: 64, color: '#000000' }]} >กรอก OTP</Text>
+                <View style={{ marginLeft: 10 }}>
+                        <PopupComponent
+                            text={'กรอกเลขที่ส่งไปทาง Gmail'}
+                            width={240}
+                        >
+                            <HelpSvg
+                                size={30}
+                                color='#000000'
+                            />
+                        </PopupComponent>
+                </View>
+            </View>
+            <View style={{ flexDirection: 'row', marginBottom: 30 }}>
 
-                {formData.OTP.map((digit, index) => (
+                {formData.code.map((digit, index) => (
                     <TextInput
                         key={index}
                         style={styles.textInput}
@@ -72,7 +63,7 @@ const OTPScreen = (props: Props) => {
             <TouchableOpacity style={styles.containerButton} onPress={handleRegister}>
                 <Text style={[styles.text, { fontSize: 40, color: '#2E2D2D' }]}>ยืนยัน</Text>
             </TouchableOpacity>
-        </View>
+        </ScrollView>
     )
 }
 
@@ -96,9 +87,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         width: 50,
         borderRadius: 10,
-        marginRight:10,
-        textAlign:'center',
-        textAlignVertical:'center'
+        marginRight: 10,
+        textAlign: 'center',
+        textAlignVertical: 'center'
     },
     text: {
         fontFamily: 'THSarabun Bold',

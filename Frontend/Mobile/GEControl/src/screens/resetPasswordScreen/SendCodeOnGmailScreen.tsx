@@ -1,51 +1,30 @@
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import LogoComponents from '../../components/LogoComponent'
 import HelpSvg from '../../assets/svg/HelpSvg';
 import PopupComponent from '../../components/PopupComponent';
+import { getCodeResetPasswordFormData } from '../../interfaces/userInterface';
 
 type Props = {}
 
-interface SendCodeOnGmailFormData {
-    email: string;
-}
-
 const SendCodeOnGmailScreen = (props: Props) => {
-    const [formData, setFormData] = useState<SendCodeOnGmailFormData>({
+    const [formData, setFormData] = useState<getCodeResetPasswordFormData>({
         email: '',
     });
 
-    const handleChangeText = (key: keyof SendCodeOnGmailFormData, value: string) => {
+    const handleChangeText = (key: keyof getCodeResetPasswordFormData, value: string) => {
         setFormData((prevData) => ({ ...prevData, [key]: value }));
     };
 
     const handleRegister = async () => {
-        // Perform your API call here using the formData object
         try {
-            // Make your API call and handle the response
-            // Example code using fetch:
-            const response = await fetch('YOUR_API_ENDPOINT', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                // Registration successful
-                Alert.alert('Registration Successful');
-            } else {
-                // Registration failed
-                Alert.alert('Registration Failed');
-            }
+            return null;
         } catch (error) {
-            // Error handling
-            Alert.alert('Error', 'An error occurred while registering.');
+            return null;
         }
     };
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.containerLogo}>
                 <LogoComponents size={200} />
             </View>
@@ -54,6 +33,7 @@ const SendCodeOnGmailScreen = (props: Props) => {
                 <View style={{ marginLeft: 10 }}>
                         <PopupComponent
                             text={'กรุณารกอกอีเมลเพื่อรีเซ็ตรหัสผ่านของคุณ'}
+                            width={320}
                         >
                             <HelpSvg
                                 size={30}
@@ -77,7 +57,7 @@ const SendCodeOnGmailScreen = (props: Props) => {
                     <View style={{ backgroundColor: '#000000', height: 2, position: 'absolute', bottom: 3, left: 2, right: 2 }} />
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
