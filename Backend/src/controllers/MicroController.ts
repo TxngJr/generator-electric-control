@@ -43,7 +43,9 @@ export async function getListMicroController(req: CustomRequest, res: Response) 
         const skip: number = (page - 1) * 10;
 
         const microControllers: MicroControllerInterFace[] = await MicroControllerModel.find({ owner: req.user._id }, { _id: 1, microControllerName: 1, systemAC: 1, EnergyACPrimary: 1 }).skip(skip).limit(10);
-
+        if (Math.ceil(totalCount / 10) < page) {
+            return res.status(404).json('This page does not exist');
+        }
         return res.status(200).json({
             microControllers,
             currentPage: page,
