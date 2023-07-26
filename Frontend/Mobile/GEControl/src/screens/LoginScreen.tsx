@@ -3,7 +3,9 @@ import React, { useState } from 'react'
 import LogoComponents from '../components/LogoComponent'
 import { loginFormData } from '../interfaces/userInterface'
 
-type Props = {}
+type Props = {
+    navigation: any
+}
 
 const LoginScreen = (props: Props) => {
     const [formData, setFormData] = useState<loginFormData>({
@@ -43,19 +45,19 @@ const LoginScreen = (props: Props) => {
                 placeholder="รหัสผ่าน"
                 secureTextEntry
             />
-            <View style={{ alignItems: 'flex-end', marginBottom:10 }}>
+            <View style={{ alignItems: 'flex-end', marginBottom: 10 }}>
                 <TouchableOpacity onPress={handleRegister}>
                     <Text style={[styles.text, { fontSize: 24, color: '#000000' }]}>ลืมรหัสผ่าน</Text>
-                    <View style={{ backgroundColor: '#000000', height: 2,position:'absolute',bottom:3,left:2,right:2 }} />
+                    <View style={{ backgroundColor: '#000000', height: 2, position: 'absolute', bottom: 3, left: 2, right: 2 }} />
                 </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.containerButton} onPress={handleRegister}>
                 <Text style={[styles.text, { fontSize: 40, color: '#2E2D2D' }]}>เข้าสู่ระบบ</Text>
             </TouchableOpacity>
             <View style={{ alignItems: 'center', marginTop: 15 }}>
-                <TouchableOpacity style={{}} onPress={handleRegister}>
+                <TouchableOpacity style={{}} onPress={() => props.navigation.navigate('Register')}>
                     <Text style={[styles.text, { fontSize: 24, color: '#000000' }]}>สมัครสมาชิก</Text>
-                    <View style={{ backgroundColor: '#000000', height: 2,position:'absolute',bottom:3,left:2,right:2 }} />
+                    <View style={{ backgroundColor: '#000000', height: 2, position: 'absolute', bottom: 3, left: 2, right: 2 }} />
                 </TouchableOpacity>
             </View>
         </ScrollView>

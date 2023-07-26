@@ -8,7 +8,7 @@ import { checkCodeResetPassword } from '../../apis/userAPI';
 
 type Props = {}
 
-const OTPScreen = (props: Props) => {
+const CheckOTPScreen = (props: Props) => {
     const [formData, setFormData] = useState<checkCodeResetPasswordFormData>({
         email: '',
         code: ['', '', '', '', '', ''],
@@ -67,7 +67,7 @@ const OTPScreen = (props: Props) => {
     )
 }
 
-export default OTPScreen
+export default CheckOTPScreen
 
 const styles = StyleSheet.create({
     container: {

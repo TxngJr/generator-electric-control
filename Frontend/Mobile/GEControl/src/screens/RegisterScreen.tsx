@@ -4,7 +4,9 @@ import LogoComponents from '../components/LogoComponent'
 import { registerFormData } from '../interfaces/userInterface'
 import { register } from '../apis/userAPI'
 
-type Props = {}
+type Props = {
+    navigation:any
+}
 
 
 const RegisterScreen = (props: Props) => {
@@ -85,7 +87,7 @@ const RegisterScreen = (props: Props) => {
                 <Text style={[styles.text, { fontSize: 40, color: '#2E2D2D' }]}>สมัครสมาชิก</Text>
             </TouchableOpacity>
             <View style={{ alignItems: 'center', marginTop: 15 }}>
-                <TouchableOpacity style={{}} onPress={handleRegister}  >
+                <TouchableOpacity style={{}} onPress={() => props.navigation.navigate('Login')}  >
                     <Text style={[styles.text, { fontSize: 24, color: '#000000' }]}>เข้าสู่ระบบ</Text>
                     <View style={{ backgroundColor: '#000000', height: 2, position: 'absolute', bottom: 1, left: 2, right: 2 }} />
                 </TouchableOpacity>

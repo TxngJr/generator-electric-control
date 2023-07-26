@@ -1,17 +1,32 @@
-import { StyleSheet} from 'react-native'
-import React from 'react'
-import RegisterScreen from './screens/RegisterScreen'
-import LoginScreen from './screens/LoginScreen'
-import SendCodeOnGmailScreen from './screens/resetPasswordScreen/SendCodeOnGmailScreen'
-import OTPScreen from './screens/resetPasswordScreen/OTPScreen'
-import ResetPasswordScreen from './screens/resetPasswordScreen/ResetPasswordScreen'
-import ListsDeviceScreen from './screens/ListsDeviceScreen'
-
+import { StyleSheet, View, Text } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppNavigator from './navigations/AppNavigator';
+import AuthNavigator from './navigations/AuthNavigator';
 type Props = {}
 
 const App = (props: Props) => {
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        setIsLogin(true);
+      }
+      setLoading(false);
+    }
+    checkToken();
+
+  }, []);
   return (
-    <ListsDeviceScreen/>
+    <NavigationContainer>
+      {
+        isLogin ?
+          <AppNavigator /> : <AuthNavigator />
+      }
+    </NavigationContainer>
   )
 }
 
